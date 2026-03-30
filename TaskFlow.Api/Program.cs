@@ -11,6 +11,7 @@ namespace TaskFlow.Api
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            builder.Services.AddScoped<IProyectoRepository, ProyectoRepository>();
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<TaskFlowContext>(options =>

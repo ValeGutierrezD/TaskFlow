@@ -1,28 +1,26 @@
-﻿using TaskFlow.Core.Entities;
-using TaskFlow.Core.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using TaskFlow.Core.Entities;
 using TaskFlow.Infrastructure.Data;
 
-namespace TaskFlow.Infrastructure.Repositories
+public class ProyectoRepository : IProyectoRepository
 {
-    public class ProyectoRepository
+    private readonly TaskFlowContext _context;
+
+    public ProyectoRepository(TaskFlowContext context)
     {
-        private readonly TaskFlowContext _context;
-        public ProyectoRepository(TaskFlowContext contex)
-        {
-            _context = contex;
-        }
+        _context = context;
+    }
 
-        public async Task<int> Crear(Proyecto proyecto)
-        {
-            _context.Proyectos.Add(proyecto);
-            await _context.SaveChangesAsync();
-            return proyecto.Id;
-        }
+    public async Task<Proyecto> CrearAsync(Proyecto proyecto)
+    {
+        _context.Proyectos.Add(proyecto);
+        await _context.SaveChangesAsync();
+        return proyecto;
+    }
 
-        public async Task<Proyecto> ObtenerPorId(int id)
-        {
-            return await _context.Proyectos.FindAsync(id);
-        }
-
+    public async Task<bool> ExisteNombreParaUsuarioAsync(string nombre, int usuarioId)
+    {
+        return await _context.Proyectos
+            .AnyAsync(p => p.Nombre == nombre && p.UsuarioId == usuarioId);
     }
 }
