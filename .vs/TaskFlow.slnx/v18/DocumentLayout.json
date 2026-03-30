@@ -1,0 +1,181 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C487F5DD-44D0-ECD6-5FB8-14D80D9477DD}|TaskFlow.Infrastructure\\TaskFlow.Infrastructure.csproj|c:\\users\\probook\\source\\repos\\taskflow\\taskflow.infrastructure\\repositories\\proyectorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C487F5DD-44D0-ECD6-5FB8-14D80D9477DD}|TaskFlow.Infrastructure\\TaskFlow.Infrastructure.csproj|solutionrelative:taskflow.infrastructure\\repositories\\proyectorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C487F5DD-44D0-ECD6-5FB8-14D80D9477DD}|TaskFlow.Infrastructure\\TaskFlow.Infrastructure.csproj|c:\\users\\probook\\source\\repos\\taskflow\\taskflow.infrastructure\\data\\configurations\\tareaconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C487F5DD-44D0-ECD6-5FB8-14D80D9477DD}|TaskFlow.Infrastructure\\TaskFlow.Infrastructure.csproj|solutionrelative:taskflow.infrastructure\\data\\configurations\\tareaconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C487F5DD-44D0-ECD6-5FB8-14D80D9477DD}|TaskFlow.Infrastructure\\TaskFlow.Infrastructure.csproj|c:\\users\\probook\\source\\repos\\taskflow\\taskflow.infrastructure\\data\\configurations\\usuarioconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C487F5DD-44D0-ECD6-5FB8-14D80D9477DD}|TaskFlow.Infrastructure\\TaskFlow.Infrastructure.csproj|solutionrelative:taskflow.infrastructure\\data\\configurations\\usuarioconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C487F5DD-44D0-ECD6-5FB8-14D80D9477DD}|TaskFlow.Infrastructure\\TaskFlow.Infrastructure.csproj|c:\\users\\probook\\source\\repos\\taskflow\\taskflow.infrastructure\\data\\configurations\\proyectoconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C487F5DD-44D0-ECD6-5FB8-14D80D9477DD}|TaskFlow.Infrastructure\\TaskFlow.Infrastructure.csproj|solutionrelative:taskflow.infrastructure\\data\\configurations\\proyectoconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4C753D5C-3AA6-F1F7-8255-441A26A66145}|TaskFlow.Api\\TaskFlow.Api.csproj|c:\\users\\probook\\source\\repos\\taskflow\\taskflow.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4C753D5C-3AA6-F1F7-8255-441A26A66145}|TaskFlow.Api\\TaskFlow.Api.csproj|solutionrelative:taskflow.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4C753D5C-3AA6-F1F7-8255-441A26A66145}|TaskFlow.Api\\TaskFlow.Api.csproj|c:\\users\\probook\\source\\repos\\taskflow\\taskflow.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{4C753D5C-3AA6-F1F7-8255-441A26A66145}|TaskFlow.Api\\TaskFlow.Api.csproj|solutionrelative:taskflow.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C487F5DD-44D0-ECD6-5FB8-14D80D9477DD}|TaskFlow.Infrastructure\\TaskFlow.Infrastructure.csproj|c:\\users\\probook\\source\\repos\\taskflow\\taskflow.infrastructure\\data\\taskflowcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C487F5DD-44D0-ECD6-5FB8-14D80D9477DD}|TaskFlow.Infrastructure\\TaskFlow.Infrastructure.csproj|solutionrelative:taskflow.infrastructure\\data\\taskflowcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D8407CA9-E29A-5091-1B9A-B9F1CD6632A2}|TaskFlow.Core\\TaskFlow.Core.csproj|c:\\users\\probook\\source\\repos\\taskflow\\taskflow.core\\entities\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D8407CA9-E29A-5091-1B9A-B9F1CD6632A2}|TaskFlow.Core\\TaskFlow.Core.csproj|solutionrelative:taskflow.core\\entities\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D8407CA9-E29A-5091-1B9A-B9F1CD6632A2}|TaskFlow.Core\\TaskFlow.Core.csproj|c:\\users\\probook\\source\\repos\\taskflow\\taskflow.core\\entities\\proyecto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D8407CA9-E29A-5091-1B9A-B9F1CD6632A2}|TaskFlow.Core\\TaskFlow.Core.csproj|solutionrelative:taskflow.core\\entities\\proyecto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D8407CA9-E29A-5091-1B9A-B9F1CD6632A2}|TaskFlow.Core\\TaskFlow.Core.csproj|c:\\users\\probook\\source\\repos\\taskflow\\taskflow.core\\entities\\tarea.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D8407CA9-E29A-5091-1B9A-B9F1CD6632A2}|TaskFlow.Core\\TaskFlow.Core.csproj|solutionrelative:taskflow.core\\entities\\tarea.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ProyectoRepository.cs",
+              "DocumentMoniker": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Infrastructure\\Repositories\\ProyectoRepository.cs",
+              "RelativeDocumentMoniker": "TaskFlow.Infrastructure\\Repositories\\ProyectoRepository.cs",
+              "ToolTip": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Infrastructure\\Repositories\\ProyectoRepository.cs",
+              "RelativeToolTip": "TaskFlow.Infrastructure\\Repositories\\ProyectoRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T19:40:48.67Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Api\\Program.cs",
+              "RelativeDocumentMoniker": "TaskFlow.Api\\Program.cs",
+              "ToolTip": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Api\\Program.cs",
+              "RelativeToolTip": "TaskFlow.Api\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T19:31:22.378Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "TareaConfiguration.cs",
+              "DocumentMoniker": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Infrastructure\\Data\\Configurations\\TareaConfiguration.cs",
+              "RelativeDocumentMoniker": "TaskFlow.Infrastructure\\Data\\Configurations\\TareaConfiguration.cs",
+              "ToolTip": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Infrastructure\\Data\\Configurations\\TareaConfiguration.cs",
+              "RelativeToolTip": "TaskFlow.Infrastructure\\Data\\Configurations\\TareaConfiguration.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T19:09:18.851Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ProyectoConfiguration.cs",
+              "DocumentMoniker": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Infrastructure\\Data\\Configurations\\ProyectoConfiguration.cs",
+              "RelativeDocumentMoniker": "TaskFlow.Infrastructure\\Data\\Configurations\\ProyectoConfiguration.cs",
+              "ToolTip": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Infrastructure\\Data\\Configurations\\ProyectoConfiguration.cs",
+              "RelativeToolTip": "TaskFlow.Infrastructure\\Data\\Configurations\\ProyectoConfiguration.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T19:08:46.215Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UsuarioConfiguration.cs",
+              "DocumentMoniker": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Infrastructure\\Data\\Configurations\\UsuarioConfiguration.cs",
+              "RelativeDocumentMoniker": "TaskFlow.Infrastructure\\Data\\Configurations\\UsuarioConfiguration.cs",
+              "ToolTip": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Infrastructure\\Data\\Configurations\\UsuarioConfiguration.cs",
+              "RelativeToolTip": "TaskFlow.Infrastructure\\Data\\Configurations\\UsuarioConfiguration.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T19:08:21.67Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Api\\appsettings.json",
+              "RelativeDocumentMoniker": "TaskFlow.Api\\appsettings.json",
+              "ToolTip": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Api\\appsettings.json",
+              "RelativeToolTip": "TaskFlow.Api\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-18T19:27:40.37Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "TaskFlowContext.cs",
+              "DocumentMoniker": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Infrastructure\\Data\\TaskFlowContext.cs",
+              "RelativeDocumentMoniker": "TaskFlow.Infrastructure\\Data\\TaskFlowContext.cs",
+              "ToolTip": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Infrastructure\\Data\\TaskFlowContext.cs",
+              "RelativeToolTip": "TaskFlow.Infrastructure\\Data\\TaskFlowContext.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAiwCAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T18:57:43.555Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Usuario.cs",
+              "DocumentMoniker": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Core\\Entities\\Usuario.cs",
+              "RelativeDocumentMoniker": "TaskFlow.Core\\Entities\\Usuario.cs",
+              "ToolTip": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Core\\Entities\\Usuario.cs",
+              "RelativeToolTip": "TaskFlow.Core\\Entities\\Usuario.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T18:54:16.856Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Proyecto.cs",
+              "DocumentMoniker": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Core\\Entities\\Proyecto.cs",
+              "RelativeDocumentMoniker": "TaskFlow.Core\\Entities\\Proyecto.cs",
+              "ToolTip": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Core\\Entities\\Proyecto.cs",
+              "RelativeToolTip": "TaskFlow.Core\\Entities\\Proyecto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T18:55:52.791Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Tarea.cs",
+              "DocumentMoniker": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Core\\Entities\\Tarea.cs",
+              "RelativeDocumentMoniker": "TaskFlow.Core\\Entities\\Tarea.cs",
+              "ToolTip": "C:\\Users\\PROBOOK\\source\\repos\\TaskFlow\\TaskFlow.Core\\Entities\\Tarea.cs",
+              "RelativeToolTip": "TaskFlow.Core\\Entities\\Tarea.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T18:55:44.584Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
