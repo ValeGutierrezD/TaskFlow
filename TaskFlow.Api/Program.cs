@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using TaskFlow.Core.Interfaces;
 using TaskFlow.Infrastructure.Data;
+
 
 namespace TaskFlow.Api
 {
@@ -8,6 +10,7 @@ namespace TaskFlow.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<TaskFlowContext>(options =>
