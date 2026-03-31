@@ -3,36 +3,23 @@ using TaskFlow.Core.Entities;
 using TaskFlow.Core.Interfaces;
 using TaskFlow.Infrastructure.Data;
 
-public class UsuarioRepository : IUsuarioRepository
+namespace TaskFlow.Infrastructure.Repositories
 {
-    private readonly TaskFlowContext _context;
-
-    public UsuarioRepository(TaskFlowContext context)
+    public class UsuarioRepository : BaseRepository<Usuario>, IUsuarioRepository
     {
-        _context = context;
-    }
+        public UsuarioRepository(TaskFlowContext context) : base(context) { }
 
-    public async Task<Usuario?> GetByIdAsync(int id) =>
-        await _context.Usuarios.FindAsync(id);
+        public async Task<Usuario?> GetByEmail(string email)
+            => await _entities.FirstOrDefaultAsync(u => u.Email == email);
 
-    public async Task AddAsync(Usuario usuario) =>
-        await _context.AddAsync(usuario);
+        public async Task<bool> EsMiembroDelProyecto(int usuarioId, int proyectoId)
+            => await _context.ProyectoUsuarios.AnyAsync(pu => pu.UsuarioId == usuarioId && pu.ProyectoId == proyectoId);
 
-    public async Task SaveChangesAsync() =>
-        await _context.SaveChangesAsync();
-
-    public async Task<Usuario?> ObtenerPorEmail(string email) =>
-        await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
-
-    public async Task AgregarMiembroAProyecto(int proyectoId, int usuarioId)
-    {
-        var proyecto = await _context.Proyectos.FindAsync(proyectoId);
-        if (proyecto != null)
+        public async Task AgregarMiembro(int proyectoId, int usuarioId, string rol = "Miembro")
         {
-            proyecto.UsuarioId = usuarioId; // Si es 1 a muchos
+            var proyectoUsuario = new ProyectoUsuario { ProyectoId = proyectoId, UsuarioId = usuarioId, Rol = rol };
+            await _context.ProyectoUsuarios.AddAsync(proyectoUsuario);
+            await _context.SaveChangesAsync();
         }
     }
-
-    public async Task<bool> EsMiembroDelProyecto(int proyectoId, int usuarioId) =>
-        await _context.Proyectos.AnyAsync(p => p.Id == proyectoId && p.UsuarioId == usuarioId);
 }
