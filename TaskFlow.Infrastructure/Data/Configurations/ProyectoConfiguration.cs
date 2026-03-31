@@ -4,29 +4,18 @@ using TaskFlow.Core.Entities;
 
 namespace TaskFlow.Infrastructure.Data.Configurations
 {
-    public class ProyectoConfiguration :
-        IEntityTypeConfiguration<Proyecto>
+    public class ProyectoConfiguration : IEntityTypeConfiguration<Proyecto>
     {
         public void Configure(EntityTypeBuilder<Proyecto> entity)
         {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
+            entity.HasKey(e => e.Id);
             entity.ToTable("proyectos");
-
-            entity.HasIndex(e => e.UsuarioId, "usuario_id");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Descripcion)
-                .HasColumnType("text")
-                .HasColumnName("descripcion");
-            entity.Property(e => e.Nombre)
-                .HasMaxLength(100)
-                .HasColumnName("nombre");
-            entity.Property(e => e.UsuarioId).HasColumnName("usuario_id");
-
-            entity.HasOne(d => d.Usuario).WithMany(p => p.Proyectos)
-                .HasForeignKey(d => d.UsuarioId)
-                .HasConstraintName("proyectos_ibfk_1");
+            entity.Property(e => e.Nombre).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.Descripcion).HasColumnType("text");
+            entity.HasOne(e => e.Creador)
+                .WithMany(u => u.ProyectosCreados)
+                .HasForeignKey(e => e.CreadorId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
