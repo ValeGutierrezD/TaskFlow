@@ -1,16 +1,12 @@
-﻿using TaskFlow.Core.Entities;
+﻿using System.Threading.Tasks;
+using TaskFlow.Core.Entities;
 
-namespace TaskFlow.Core.Interfaces;
-
-public interface IUsuarioRepository
+namespace TaskFlow.Core.Interfaces
 {
-    // Métodos CRUD básicos
-    Task<Usuario?> GetByIdAsync(int id);
-    Task AddAsync(Usuario usuario);
-    Task SaveChangesAsync();
-
-    // Métodos de lógica de negocio 
-    Task<Usuario?> ObtenerPorEmail(string email);
-    Task AgregarMiembroAProyecto(int proyectoId, int usuarioId);
-    Task<bool> EsMiembroDelProyecto(int proyectoId, int usuarioId);
+    public interface IUsuarioRepository : IBaseRepository<Usuario>
+    {
+        Task<Usuario?> GetByEmail(string email);
+        Task<bool> EsMiembroDelProyecto(int usuarioId, int proyectoId);
+        Task AgregarMiembro(int proyectoId, int usuarioId, string rol = "Miembro");
+    }
 }

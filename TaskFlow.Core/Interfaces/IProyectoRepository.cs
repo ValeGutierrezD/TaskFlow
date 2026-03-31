@@ -1,7 +1,11 @@
-﻿using TaskFlow.Core.Entities;
+﻿using System.Threading.Tasks;
+using TaskFlow.Core.Entities;
 
-public interface IProyectoRepository
+namespace TaskFlow.Core.Interfaces
 {
-    Task<Proyecto> CrearAsync(Proyecto proyecto);
-    Task<bool> ExisteNombreParaUsuarioAsync(string nombre, int usuarioId);
+    public interface IProyectoRepository : IBaseRepository<Proyecto>
+    {
+        Task<bool> ExisteNombreParaCreador(string nombre, int creadorId);
+        Task<Proyecto?> GetByIdWithMembers(int id);
+    }
 }
