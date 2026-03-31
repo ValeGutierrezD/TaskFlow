@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using TaskFlow.Core.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
+using TaskFlow.Api.Responses;
+using TaskFlow.Core.DTOs;
+using TaskFlow.Services.Interfaces;
+using TaskFlow.Services.Validators;
 
 namespace TaskFlow.Api.Controllers
 {
@@ -8,27 +10,31 @@ namespace TaskFlow.Api.Controllers
     [Route("api/[controller]")]
     public class ProyectosController : ControllerBase
     {
-        private readonly IProyectoRepository _proyectoRepo;
+        private readonly IProyectoService _proyectoService;
+        private readonly CrearProyectoDtoValidator _crearValidator;
 
-        public ProyectosController(IProyectoRepository proyectoRepo)
+        public ProyectosController(IProyectoService proyectoService, CrearProyectoDtoValidator crearValidator)
         {
-            _proyectoRepo = proyectoRepo;
+            _proyectoService = proyectoService;
+            _crearValidator = crearValidator;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Crear(Proyecto proyecto)
+        public async Task<IActionResult> CrearProyecto(CrearProyectoDto dto)
         {
-            // Validaciones del Flujo Principal
-            if (string.IsNullOrEmpty(proyecto.Nombre))
-                return BadRequest("El nombre del proyecto es obligatorio.");
+            var validation = await _crearValidator.ValidateAsync(dto);
+            if (!validation.IsValid)
+                return BadRequest(new ApiResponse<object>("Error de validación", validation.Errors.Select(e => e.ErrorMessage).ToList()));
 
-            // Validación Flujo Alternativo A
-            var existe = await _proyectoRepo.ExisteNombreParaUsuarioAsync(proyecto.Nombre, proyecto.UsuarioId);
-            if (existe)
-                return BadRequest("Ya tienes un proyecto con ese nombre.");
-
-            var nuevoProyecto = await _proyectoRepo.CrearAsync(proyecto);
-            return CreatedAtAction(nameof(Crear), new { id = nuevoProyecto.Id }, nuevoProyecto);
+            try
+            {
+                var proyecto = await _proyectoService.CrearProyecto(dto);
+                return Ok(new ApiResponse<ProyectoDto>(proyecto!, "Proyecto creado con éxito"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse<object>(ex.Message, new List<string>()));
+            }
         }
     }
 }

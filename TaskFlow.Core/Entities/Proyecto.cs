@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace TaskFlow.Core.Entities
 {
     public class Proyecto : BaseEntity

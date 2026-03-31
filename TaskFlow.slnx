@@ -2,4 +2,5 @@
   <Project Path="TaskFlow.Api/TaskFlow.Api.csproj" />
   <Project Path="TaskFlow.Core/TaskFlow.Core.csproj" />
   <Project Path="TaskFlow.Infrastructure/TaskFlow.Infrastructure.csproj" />
+  <Project Path="TaskFlow.Services/TaskFlow.Services.csproj" Id="0aad34bd-18eb-4a95-b9d3-53db54e5983f" />
 </Solution>

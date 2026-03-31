@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using TaskFlow.Core.Entities;
+﻿using TaskFlow.Core.Entities;
 
 namespace TaskFlow.Core.Interfaces
 {
@@ -7,5 +6,6 @@ namespace TaskFlow.Core.Interfaces
     {
         Task<bool> ExisteNombreParaCreador(string nombre, int creadorId);
         Task<Proyecto?> GetByIdWithMembers(int id);
+        Task AddMember(int proyectoId, int usuarioId, string rol);
     }
 }

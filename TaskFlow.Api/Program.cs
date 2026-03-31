@@ -1,46 +1,55 @@
 using Microsoft.EntityFrameworkCore;
 using TaskFlow.Core.Interfaces;
 using TaskFlow.Infrastructure.Data;
+using TaskFlow.Infrastructure.Repositories;
+using TaskFlow.Services.Interfaces;
+using TaskFlow.Services.Services;
+using TaskFlow.Services.Validators;
 
+var builder = WebApplication.CreateBuilder(args);
 
-namespace TaskFlow.Api
+// Configurar base de datos MySQL
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<TaskFlowContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+// Registrar repositorios genéricos y específicos
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IProyectoRepository, ProyectoRepository>();
+builder.Services.AddScoped<ITareaRepository, TareaRepository>();
+
+// Registrar servicios
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IProyectoService, ProyectoService>();
+builder.Services.AddScoped<ITareaService, TareaService>();
+
+// AutoMapper
+builder.Services.AddAutoMapper((Action<AutoMapper.IMapperConfigurationExpression>?)null, AppDomain.CurrentDomain.GetAssemblies());
+
+// FluentValidation validators
+builder.Services.AddScoped<CrearUsuarioDtoValidator>();
+builder.Services.AddScoped<LoginDtoValidator>();
+builder.Services.AddScoped<CrearProyectoDtoValidator>();
+builder.Services.AddScoped<CrearTareaDtoValidator>();
+builder.Services.AddScoped<AsignarTareaDtoValidator>();
+
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-            builder.Services.AddScoped<IProyectoRepository, ProyectoRepository>();
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
 
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddDbContext<TaskFlowContext>(options =>
-            options.UseMySql(
-                connectionString,
-                ServerVersion.AutoDetect(connectionString),
-                // Esto es opcional pero recomendado para que EF sepa dónde están tus configuraciones
-                b => b.MigrationsAssembly("TaskFlow.Infrastructure")
-            ));
+builder.Services.AddOpenApi();
 
-            // Agrega el soporte para controladores (Para tus Casos de Uso)
-            builder.Services.AddControllers();
+var app = builder.Build();
 
-            // Configura OpenAPI/Swagger (Requisito de la sección 6.2 de tu plantilla)
-            builder.Services.AddOpenApi();
-
-            var app = builder.Build();
-
-            // Configuración del pipeline (Orden de ejecución)
-            if (app.Environment.IsDevelopment())
-            {
-                app.MapOpenApi(); // Esto habilita la documentación interactiva
-            }
-
-            app.UseHttpsRedirection(); // Seguridad básica obligatoria
-            app.UseAuthorization();
-            app.MapControllers(); // Mapea tus rutas como /api/auth/login
-
-            app.Run();
-        }
-    }
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
 }
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();

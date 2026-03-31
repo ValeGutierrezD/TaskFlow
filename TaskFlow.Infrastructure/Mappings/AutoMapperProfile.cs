@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using TaskFlow.Core.DTOs;
 using TaskFlow.Core.Entities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TaskFlow.Infrastructure.Mappings
 {

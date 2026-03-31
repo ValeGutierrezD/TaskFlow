@@ -1,58 +1,60 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TaskFlow.Core.Entities;
-using TaskFlow.Core.Interfaces;
+using TaskFlow.Api.Responses;
+using TaskFlow.Core.DTOs;
+using TaskFlow.Services.Interfaces;
+using TaskFlow.Services.Validators;
 
-namespace TaskFlow.Api.Controllers;
-
-[ApiController]
-[Route("api/[controller]")] // La ruta será: api/usuarios
-public class UsuariosController : ControllerBase
+namespace TaskFlow.Api.Controllers
 {
-    private readonly IUsuarioRepository _repository;
-
-    public UsuariosController(IUsuarioRepository repository)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UsuariosController : ControllerBase
     {
-        _repository = repository;
-    }
+        private readonly IUsuarioService _usuarioService;
+        private readonly CrearUsuarioDtoValidator _crearValidator;
+        private readonly LoginDtoValidator _loginValidator;
 
-    // GET: api/usuarios/{id}
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Usuario>> GetUsuario(int id)
-    {
-        var usuario = await _repository.GetByIdAsync(id);
-
-        if (usuario == null)
+        public UsuariosController(IUsuarioService usuarioService, CrearUsuarioDtoValidator crearValidator, LoginDtoValidator loginValidator)
         {
-            return NotFound(new { message = $"Usuario con ID {id} no encontrado." });
+            _usuarioService = usuarioService;
+            _crearValidator = crearValidator;
+            _loginValidator = loginValidator;
         }
 
-        return Ok(usuario);
-    }
-
-    // POST: api/usuarios
-    [HttpPost]
-    public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
-    {
-        // Validación básica de negocio: ¿Ya existe el email?
-        var existente = await _repository.ObtenerPorEmail(usuario.Email);
-        if (existente != null)
+        [HttpPost("registro")]
+        public async Task<IActionResult> Registrar(CrearUsuarioDto dto)
         {
-            return BadRequest(new { message = "El correo electrónico ya está registrado." });
+            var validation = await _crearValidator.ValidateAsync(dto);
+            if (!validation.IsValid)
+                return BadRequest(new ApiResponse<object>("Error de validación", validation.Errors.Select(e => e.ErrorMessage).ToList()));
+
+            try
+            {
+                var usuario = await _usuarioService.Registrar(dto);
+                return Ok(new ApiResponse<UsuarioDto>(usuario!, "Usuario registrado con éxito"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse<object>(ex.Message, new List<string>()));
+            }
         }
 
-        await _repository.AddAsync(usuario);
-        await _repository.SaveChangesAsync();
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDto dto)
+        {
+            var validation = await _loginValidator.ValidateAsync(dto);
+            if (!validation.IsValid)
+                return BadRequest(new ApiResponse<object>("Error de validación", validation.Errors.Select(e => e.ErrorMessage).ToList()));
 
-        // Retorna un 201 Created y la ubicación del nuevo recurso
-        return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
-    }
-
-    // GET: api/usuarios/buscar?email=test@test.com
-    [HttpGet("buscar")]
-    public async Task<ActionResult<Usuario>> GetByEmail([FromQuery] string email)
-    {
-        var usuario = await _repository.ObtenerPorEmail(email);
-        if (usuario == null) return NotFound();
-        return Ok(usuario);
+            try
+            {
+                var usuario = await _usuarioService.Login(dto);
+                return Ok(new ApiResponse<UsuarioDto>(usuario!, "Login exitoso"));
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(new ApiResponse<object>(ex.Message, new List<string>()));
+            }
+        }
     }
 }

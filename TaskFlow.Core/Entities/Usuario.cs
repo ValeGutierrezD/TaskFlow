@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-
+﻿
 namespace TaskFlow.Core.Entities
 {
     public class Usuario : BaseEntity

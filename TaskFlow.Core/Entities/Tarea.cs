@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 namespace TaskFlow.Core.Entities
 {
     public class Tarea : BaseEntity
