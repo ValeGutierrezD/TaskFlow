@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskFlow.Core.Interfaces;
 using TaskFlow.Infrastructure.Data;
+using TaskFlow.Infrastructure.Mappings;
 using TaskFlow.Infrastructure.Repositories;
 using TaskFlow.Services.Interfaces;
 using TaskFlow.Services.Services;
@@ -24,8 +25,8 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IProyectoService, ProyectoService>();
 builder.Services.AddScoped<ITareaService, TareaService>();
 
-// AutoMapper
-builder.Services.AddAutoMapper((Action<AutoMapper.IMapperConfigurationExpression>?)null, AppDomain.CurrentDomain.GetAssemblies());
+// AutoMapper - Registrar el perfil de mapeo
+builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 // FluentValidation validators
 builder.Services.AddScoped<CrearUsuarioDtoValidator>();
@@ -33,16 +34,21 @@ builder.Services.AddScoped<LoginDtoValidator>();
 builder.Services.AddScoped<CrearProyectoDtoValidator>();
 builder.Services.AddScoped<CrearTareaDtoValidator>();
 builder.Services.AddScoped<AsignarTareaDtoValidator>();
+builder.Services.AddScoped<ActualizarProyectoDtoValidator>(); // Nuevo
+builder.Services.AddScoped<ActualizarTareaDtoValidator>();   // Nuevo
 
+// Configurar controladores con NewtonsoftJson para evitar bucles de referencia
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
 
+// Agregar OpenAPI (Swagger) para desarrollo
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+// Configurar el pipeline de HTTP
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

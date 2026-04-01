@@ -12,6 +12,7 @@ namespace TaskFlow.Services.Services
         private readonly IUsuarioRepository _usuarioRepo;
         private readonly IProyectoRepository _proyectoRepo;
         private readonly IMapper _mapper;
+
         public TareaService(ITareaRepository tareaRepo, IUsuarioRepository usuarioRepo, IProyectoRepository proyectoRepo, IMapper mapper)
         {
             _tareaRepo = tareaRepo;
@@ -35,6 +36,44 @@ namespace TaskFlow.Services.Services
             tarea.Estado = "Pendiente";
             await _tareaRepo.Add(tarea);
             return _mapper.Map<TareaDto>(tarea);
+        }
+
+        public async Task<IEnumerable<TareaDto>> GetTareasByProyecto(int proyectoId)
+        {
+            var tareas = await _tareaRepo.GetByProyecto(proyectoId);
+            return _mapper.Map<IEnumerable<TareaDto>>(tareas);
+        }
+
+        public async Task<TareaDto?> GetTareaById(int id)
+        {
+            var tarea = await _tareaRepo.GetById(id);
+            return tarea == null ? null : _mapper.Map<TareaDto>(tarea);
+        }
+
+        public async Task<TareaDto?> ActualizarTarea(int id, ActualizarTareaDto dto, int usuarioId)
+        {
+            var tarea = await _tareaRepo.GetById(id);
+            if (tarea == null) throw new Exception("Tarea no encontrada");
+
+            // Verificar que el usuario sea miembro del proyecto (o admin)
+            bool esMiembro = await _usuarioRepo.EsMiembroDelProyecto(usuarioId, tarea.ProyectoId);
+            if (!esMiembro) throw new Exception("No tienes permiso para modificar esta tarea");
+
+            _mapper.Map(dto, tarea);
+            await _tareaRepo.Update(tarea);
+            return _mapper.Map<TareaDto>(tarea);
+        }
+
+        public async Task<bool> EliminarTarea(int id, int usuarioId)
+        {
+            var tarea = await _tareaRepo.GetById(id);
+            if (tarea == null) throw new Exception("Tarea no encontrada");
+
+            bool esMiembro = await _usuarioRepo.EsMiembroDelProyecto(usuarioId, tarea.ProyectoId);
+            if (!esMiembro) throw new Exception("No tienes permiso para eliminar esta tarea");
+
+            await _tareaRepo.Delete(id);
+            return true;
         }
 
         public async Task<bool> AsignarTarea(AsignarTareaDto dto)
