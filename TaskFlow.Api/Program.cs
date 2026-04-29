@@ -1,4 +1,6 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using TaskFlow.Api.Filters;
 using TaskFlow.Core.Interfaces;
 using TaskFlow.Infrastructure.Data;
 using TaskFlow.Infrastructure.Mappings;
@@ -14,19 +16,25 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<TaskFlowContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-// Registrar repositorios genéricos y específicos
-builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+// Registrar UnitOfWork, Dapper y Factory
+builder.Services.AddSingleton<IDbConnectionFactory, DbConnectionFactory>();
+builder.Services.AddScoped<IDapperContext, DapperContext>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// Repositorios específicos
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IProyectoRepository, ProyectoRepository>();
 builder.Services.AddScoped<ITareaRepository, TareaRepository>();
+builder.Services.AddScoped<IComentarioRepository, ComentarioRepository>();
 
-// Registrar servicios
+// Servicios
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IProyectoService, ProyectoService>();
 builder.Services.AddScoped<ITareaService, TareaService>();
+builder.Services.AddScoped<IComentarioService, ComentarioService>();
 
-// AutoMapper - Registrar el perfil de mapeo
-builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
+// AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // FluentValidation validators
 builder.Services.AddScoped<CrearUsuarioDtoValidator>();
@@ -34,21 +42,24 @@ builder.Services.AddScoped<LoginDtoValidator>();
 builder.Services.AddScoped<CrearProyectoDtoValidator>();
 builder.Services.AddScoped<CrearTareaDtoValidator>();
 builder.Services.AddScoped<AsignarTareaDtoValidator>();
-builder.Services.AddScoped<ActualizarProyectoDtoValidator>(); // Nuevo
-builder.Services.AddScoped<ActualizarTareaDtoValidator>();   // Nuevo
+builder.Services.AddScoped<ActualizarProyectoDtoValidator>();
+builder.Services.AddScoped<ActualizarTareaDtoValidator>();
 
-// Configurar controladores con NewtonsoftJson para evitar bucles de referencia
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+}).ConfigureApiBehaviorOptions(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
 });
 
-// Agregar OpenAPI (Swagger) para desarrollo
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configurar el pipeline de HTTP
+// Middleware global de excepciones
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

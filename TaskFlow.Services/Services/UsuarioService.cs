@@ -1,27 +1,28 @@
 ﻿using AutoMapper;
 using TaskFlow.Core.DTOs;
 using TaskFlow.Core.Entities;
+using TaskFlow.Core.Exceptions;
 using TaskFlow.Core.Interfaces;
 using TaskFlow.Services.Interfaces;
+using System.Net;
 
 namespace TaskFlow.Services.Services
 {
     public class UsuarioService : IUsuarioService
     {
-        private readonly IUsuarioRepository _usuarioRepo;
-        private readonly IProyectoRepository _proyectoRepo;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public UsuarioService(IUsuarioRepository usuarioRepo, IProyectoRepository proyectoRepo, IMapper mapper)
+
+        public UsuarioService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _usuarioRepo = usuarioRepo;
-            _proyectoRepo = proyectoRepo;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<UsuarioDto?> Registrar(CrearUsuarioDto dto)
         {
-            var existente = await _usuarioRepo.GetByEmail(dto.Email);
-            if (existente != null) throw new Exception("El email ya está registrado");
+            var existente = await _unitOfWork.UsuarioRepository.GetByEmail(dto.Email);
+            if (existente != null) throw new BusinessException("El email ya está registrado", HttpStatusCode.BadRequest);
 
             var usuario = new Usuario
             {
@@ -29,28 +30,30 @@ namespace TaskFlow.Services.Services
                 Email = dto.Email,
                 PasswordHash = dto.Password // En producción usar hash
             };
-            await _usuarioRepo.Add(usuario);
+            await _unitOfWork.UsuarioRepository.Add(usuario);
+            await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<UsuarioDto>(usuario);
         }
 
         public async Task<UsuarioDto?> Login(LoginDto dto)
         {
-            var usuario = await _usuarioRepo.GetByEmail(dto.Email);
-            if (usuario == null || usuario.PasswordHash != dto.Password) // hash comparación
-                throw new Exception("Credenciales inválidas");
+            var usuario = await _unitOfWork.UsuarioRepository.GetByEmail(dto.Email);
+            if (usuario == null || usuario.PasswordHash != dto.Password)
+                throw new BusinessException("Credenciales inválidas", HttpStatusCode.Unauthorized);
             return _mapper.Map<UsuarioDto>(usuario);
         }
 
         public async Task<bool> InvitarMiembro(int proyectoId, int usuarioId, int adminId)
         {
-            var proyecto = await _proyectoRepo.GetById(proyectoId);
-            if (proyecto == null) throw new Exception("Proyecto no existe");
-            if (proyecto.CreadorId != adminId) throw new Exception("Solo el creador puede invitar miembros");
+            var proyecto = await _unitOfWork.ProyectoRepository.GetById(proyectoId);
+            if (proyecto == null) throw new BusinessException("Proyecto no existe", HttpStatusCode.NotFound);
+            if (proyecto.CreadorId != adminId) throw new BusinessException("Solo el creador puede invitar miembros", HttpStatusCode.Forbidden);
 
-            var usuario = await _usuarioRepo.GetById(usuarioId);
-            if (usuario == null) throw new Exception("Usuario no existe");
+            var usuario = await _unitOfWork.UsuarioRepository.GetById(usuarioId);
+            if (usuario == null) throw new BusinessException("Usuario no existe", HttpStatusCode.NotFound);
 
-            await _usuarioRepo.AgregarMiembro(proyectoId, usuarioId);
+            await _unitOfWork.UsuarioRepository.AgregarMiembro(proyectoId, usuarioId);
+            await _unitOfWork.SaveChangesAsync();
             return true;
         }
     }

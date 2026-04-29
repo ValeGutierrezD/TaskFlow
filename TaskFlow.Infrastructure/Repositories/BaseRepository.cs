@@ -17,9 +17,17 @@ namespace TaskFlow.Infrastructure.Repositories
         }
 
         public async Task<IEnumerable<T>> GetAll() => await _entities.ToListAsync();
-        public async Task<T> GetById(int id) => await _entities.FindAsync(id);
+
+        public async Task<T?> GetById(int id) => await _entities.FindAsync(id);
+
         public async Task Add(T entity) => await _entities.AddAsync(entity);
-        public void Update(T entity) => _entities.Update(entity);
+
+        public Task Update(T entity)
+        {
+            _entities.Update(entity);
+            return Task.CompletedTask;
+        }
+
         public async Task Delete(int id)
         {
             var entity = await GetById(id);

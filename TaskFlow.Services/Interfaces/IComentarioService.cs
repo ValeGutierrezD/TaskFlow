@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using TaskFlow.Core.DTOs;
 
 namespace TaskFlow.Services.Interfaces
 {
-    internal class IComentarioService
+    public interface IComentarioService
     {
+        Task<ComentarioDto> AgregarComentario(int tareaId, int usuarioId, string contenido);
+        Task<IEnumerable<ComentarioDto>> GetComentariosByTarea(int tareaId);
     }
 }
