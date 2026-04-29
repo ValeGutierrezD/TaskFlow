@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaskFlow.Api.Responses;
 using TaskFlow.Core.DTOs;
+using TaskFlow.Core.QueryFilters;
 using TaskFlow.Services.Interfaces;
 using TaskFlow.Services.Validators;
 
@@ -123,6 +124,13 @@ namespace TaskFlow.Api.Controllers
             {
                 return BadRequest(new ApiResponse<object>(ex.Message, new List<string>()));
             }
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> GetTareasFiltradas([FromQuery] TareaQueryFilter filtros)
+        {
+            var tareas = await _tareaService.GetTareasFiltradas(filtros);
+            return Ok(new ApiResponse<IEnumerable<TareaDto>>(tareas, "Tareas filtradas"));
         }
     }
 }

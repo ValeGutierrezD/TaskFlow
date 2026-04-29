@@ -13,6 +13,8 @@ namespace TaskFlow.Infrastructure.Data
         public DbSet<Tarea> Tareas { get; set; }
         public DbSet<ProyectoUsuario> ProyectoUsuarios { get; set; }
 
+        public DbSet<Comentario> Comentarios { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

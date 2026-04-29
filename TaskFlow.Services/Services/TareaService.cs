@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using System.Net;
 using TaskFlow.Core.DTOs;
 using TaskFlow.Core.Entities;
 using TaskFlow.Core.Exceptions;
 using TaskFlow.Core.Interfaces;
+using TaskFlow.Core.QueryFilters;
 using TaskFlow.Services.Interfaces;
-using System.Net;
 
 namespace TaskFlow.Services.Services
 {
@@ -102,6 +103,22 @@ namespace TaskFlow.Services.Services
             await _unitOfWork.TareaRepository.Update(tarea);
             await _unitOfWork.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<IEnumerable<TareaDto>> GetTareasFiltradas(TareaQueryFilter filtros)
+        {
+            var tareas = await _unitOfWork.TareaRepository.GetAll();
+            if (filtros.ProyectoId.HasValue)
+                tareas = tareas.Where(t => t.ProyectoId == filtros.ProyectoId);
+            if (filtros.UsuarioAsignadoId.HasValue)
+                tareas = tareas.Where(t => t.UsuarioAsignadoId == filtros.UsuarioAsignadoId);
+            if (!string.IsNullOrEmpty(filtros.Estado))
+                tareas = tareas.Where(t => t.Estado == filtros.Estado);
+            if (filtros.FechaVencimientoDesde.HasValue)
+                tareas = tareas.Where(t => t.FechaVencimiento >= filtros.FechaVencimientoDesde);
+            if (filtros.FechaVencimientoHasta.HasValue)
+                tareas = tareas.Where(t => t.FechaVencimiento <= filtros.FechaVencimientoHasta);
+            return _mapper.Map<IEnumerable<TareaDto>>(tareas);
         }
     }
 }

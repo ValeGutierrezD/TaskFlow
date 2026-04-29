@@ -1,4 +1,5 @@
 ﻿using TaskFlow.Core.DTOs;
+using TaskFlow.Core.QueryFilters;
 
 namespace TaskFlow.Services.Interfaces
 {
@@ -11,5 +12,6 @@ namespace TaskFlow.Services.Interfaces
         Task<bool> EliminarTarea(int id, int usuarioId);
         Task<bool> AsignarTarea(AsignarTareaDto dto);
         Task<bool> CambiarEstado(int tareaId, string nuevoEstado, int usuarioId);
+        Task<IEnumerable<TareaDto>> GetTareasFiltradas(TareaQueryFilter filtros);
     }
 }

@@ -44,6 +44,7 @@ builder.Services.AddScoped<CrearTareaDtoValidator>();
 builder.Services.AddScoped<AsignarTareaDtoValidator>();
 builder.Services.AddScoped<ActualizarProyectoDtoValidator>();
 builder.Services.AddScoped<ActualizarTareaDtoValidator>();
+builder.Services.AddScoped<ComentarioDtoValidator>();
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
@@ -68,5 +69,19 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"ERROR: {ex.Message}");
+        Console.WriteLine($"STACK: {ex.StackTrace}");
+        throw;
+    }
+});
 
 app.Run();

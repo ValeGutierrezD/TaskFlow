@@ -15,7 +15,7 @@ namespace TaskFlow.Core.Entities
         [Column("proyecto_id")]
         public int ProyectoId { get; set; }
 
-        [Column("usuario_assigned_id")] 
+        [Column("usuario_asignado_id")]
         public int? UsuarioAsignadoId { get; set; }
 
         [ForeignKey("ProyectoId")]
