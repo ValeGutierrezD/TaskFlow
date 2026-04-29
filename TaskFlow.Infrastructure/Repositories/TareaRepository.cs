@@ -18,7 +18,7 @@ namespace TaskFlow.Infrastructure.Repositories
             if (tarea != null)
             {
                 tarea.Estado = nuevoEstado;
-                Update(tarea); // llamar sin await si Update devuelve void
+                //Update(tarea);
             }
         }
     }

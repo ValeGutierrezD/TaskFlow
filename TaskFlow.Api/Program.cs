@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TaskFlow.Api.Filters;
 using TaskFlow.Core.Interfaces;
@@ -69,19 +68,5 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-
-app.Use(async (context, next) =>
-{
-    try
-    {
-        await next();
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"ERROR: {ex.Message}");
-        Console.WriteLine($"STACK: {ex.StackTrace}");
-        throw;
-    }
-});
 
 app.Run();

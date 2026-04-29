@@ -18,7 +18,6 @@ namespace TaskFlow.Infrastructure.Repositories
         {
             var pu = new ProyectoUsuario { ProyectoId = proyectoId, UsuarioId = usuarioId, Rol = rol };
             await _context.ProyectoUsuarios.AddAsync(pu);
-            await _context.SaveChangesAsync();
         }
     }
 }

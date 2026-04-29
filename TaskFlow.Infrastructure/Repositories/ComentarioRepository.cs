@@ -28,11 +28,5 @@ namespace TaskFlow.Infrastructure.Repositories
                 ORDER BY c.fecha_creacion DESC";
             return await _dapper.QueryAsync<Comentario>(sql, new { tareaId });
         }
-
-        public async Task Update(Comentario entity)
-        {
-            _entities.Update(entity);
-            await _context.SaveChangesAsync();
-        }
     }
 }
