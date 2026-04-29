@@ -26,7 +26,7 @@ builder.Services.AddScoped<IProyectoService, ProyectoService>();
 builder.Services.AddScoped<ITareaService, TareaService>();
 
 // AutoMapper - Registrar el perfil de mapeo
-builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
 
 // FluentValidation validators
 builder.Services.AddScoped<CrearUsuarioDtoValidator>();
