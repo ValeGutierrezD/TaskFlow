@@ -28,5 +28,6 @@ namespace TaskFlow.Infrastructure.Repositories
                 ORDER BY c.fecha_creacion DESC";
             return await _dapper.QueryAsync<Comentario>(sql, new { tareaId });
         }
+
     }
 }

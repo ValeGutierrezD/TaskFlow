@@ -2,6 +2,7 @@
 using TaskFlow.Core.Entities;
 using TaskFlow.Core.Interfaces;
 using TaskFlow.Infrastructure.Data;
+
 namespace TaskFlow.Infrastructure.Repositories
 {
     public class ProyectoRepository : BaseRepository<Proyecto>, IProyectoRepository
@@ -18,6 +19,7 @@ namespace TaskFlow.Infrastructure.Repositories
         {
             var pu = new ProyectoUsuario { ProyectoId = proyectoId, UsuarioId = usuarioId, Rol = rol };
             await _context.ProyectoUsuarios.AddAsync(pu);
+            // SaveChanges eliminado – lo maneja UnitOfWork
         }
     }
 }

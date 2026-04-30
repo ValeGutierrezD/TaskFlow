@@ -8,7 +8,7 @@ namespace TaskFlow.Core.DTOs
         public string Titulo { get; set; } = null!;
         public string? Descripcion { get; set; }
         public string Estado { get; set; } = null!;
-        public DateTime FechaVencimiento { get; set; }
+        public string FechaVencimiento { get; set; } = string.Empty;
         public int ProyectoId { get; set; }
         public int? UsuarioAsignadoId { get; set; }
     }
