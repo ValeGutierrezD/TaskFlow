@@ -1,25 +1,46 @@
-﻿namespace TaskFlow.Api.Responses
+using TaskFlow.Core.CustomEntities;
+
+namespace TaskFlow.Api.Responses
 {
     public class ApiResponse<T>
     {
-        public bool Success { get; set; }
-        public string Message { get; set; } = string.Empty;
         public T? Data { get; set; }
-        public List<string> Errors { get; set; } = new();
+        public Pagination? Pagination { get; set; }
+        public Message[]? Messages { get; set; }
+        public bool Success { get; set; }
 
+        // Constructor exito con datos y mensaje
         public ApiResponse(T data, string message = "")
         {
             Success = true;
             Data = data;
-            Message = message;
+            Messages = new[]
+            {
+                new Message { Type = Core.Enum.TypeMessage.success.ToString(), Description = message }
+            };
         }
 
-        public ApiResponse(string message, List<string> errors)
+        // Constructor exito con datos, mensaje y paginacion
+        public ApiResponse(T data, string message, Pagination pagination)
+        {
+            Success = true;
+            Data = data;
+            Messages = new[]
+            {
+                new Message { Type = Core.Enum.TypeMessage.success.ToString(), Description = message }
+            };
+            Pagination = pagination;
+        }
+
+        // Constructor error
+        public ApiResponse(string message, List<string>? errors = null)
         {
             Success = false;
-            Message = message;
-            Errors = errors;
+            Messages = new[]
+            {
+                new Message { Type = Core.Enum.TypeMessage.error.ToString(), Description = message }
+            };
+            Data = default;
         }
     }
 }
-

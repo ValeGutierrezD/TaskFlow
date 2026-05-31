@@ -1,6 +1,6 @@
-﻿namespace TaskFlow.Core.QueryFilters
+namespace TaskFlow.Core.QueryFilters
 {
-    public class TareaQueryFilter
+    public class TareaQueryFilter : PaginationQueryFilter
     {
         public int? ProyectoId { get; set; }
         public int? UsuarioAsignadoId { get; set; }

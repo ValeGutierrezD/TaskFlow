@@ -1,5 +1,6 @@
-﻿using AutoMapper;
+using AutoMapper;
 using System.Net;
+using TaskFlow.Core.CustomEntities;
 using TaskFlow.Core.DTOs;
 using TaskFlow.Core.Entities;
 using TaskFlow.Core.Exceptions;
@@ -20,7 +21,7 @@ namespace TaskFlow.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<TareaDto?> CrearTarea(CrearTareaDto dto)
+        public async Task<TareaDto?> CrearTarea(CrearTareaDto dto, int usuarioId)
         {
             var proyecto = await _unitOfWork.ProyectoRepository.GetById(dto.ProyectoId);
             if (proyecto == null) throw new BusinessException("Proyecto no existe", HttpStatusCode.NotFound);
@@ -28,7 +29,7 @@ namespace TaskFlow.Services.Services
             if (dto.UsuarioAsignadoId.HasValue)
             {
                 bool esMiembro = await _unitOfWork.UsuarioRepository.EsMiembroDelProyecto(dto.UsuarioAsignadoId.Value, dto.ProyectoId);
-                if (!esMiembro) throw new BusinessException("El usuario asignado no es miembro del proyecto", HttpStatusCode.BadRequest);
+                if (!esMiembro) throw new BusinessException("El usuario asignado no es miembro", HttpStatusCode.BadRequest);
             }
 
             var tarea = _mapper.Map<Tarea>(dto);
@@ -38,10 +39,11 @@ namespace TaskFlow.Services.Services
             return _mapper.Map<TareaDto>(tarea);
         }
 
-        public async Task<IEnumerable<TareaDto>> GetTareasByProyecto(int proyectoId)
+        public async Task<IEnumerable<TareaDto>> GetTareasByProyecto(int proyectoId, PaginationQueryFilter pagination)
         {
             var tareas = await _unitOfWork.TareaRepository.GetByProyecto(proyectoId);
-            return _mapper.Map<IEnumerable<TareaDto>>(tareas);
+            var dtos = _mapper.Map<IEnumerable<TareaDto>>(tareas);
+            return PagedList<TareaDto>.Create(dtos, pagination.PageNumber, pagination.PageSize);
         }
 
         public async Task<TareaDto?> GetTareaById(int id)
@@ -55,7 +57,7 @@ namespace TaskFlow.Services.Services
             var tarea = await _unitOfWork.TareaRepository.GetById(id);
             if (tarea == null) throw new BusinessException("Tarea no encontrada", HttpStatusCode.NotFound);
             bool esMiembro = await _unitOfWork.UsuarioRepository.EsMiembroDelProyecto(usuarioId, tarea.ProyectoId);
-            if (!esMiembro) throw new BusinessException("No tienes permiso para modificar esta tarea", HttpStatusCode.Forbidden);
+            if (!esMiembro) throw new BusinessException("No tienes permiso para modificar", HttpStatusCode.Forbidden);
 
             _mapper.Map(dto, tarea);
             await _unitOfWork.TareaRepository.Update(tarea);
@@ -68,14 +70,14 @@ namespace TaskFlow.Services.Services
             var tarea = await _unitOfWork.TareaRepository.GetById(id);
             if (tarea == null) throw new BusinessException("Tarea no encontrada", HttpStatusCode.NotFound);
             bool esMiembro = await _unitOfWork.UsuarioRepository.EsMiembroDelProyecto(usuarioId, tarea.ProyectoId);
-            if (!esMiembro) throw new BusinessException("No tienes permiso para eliminar esta tarea", HttpStatusCode.Forbidden);
+            if (!esMiembro) throw new BusinessException("No tienes permiso para eliminar", HttpStatusCode.Forbidden);
 
             await _unitOfWork.TareaRepository.Delete(id);
             await _unitOfWork.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> AsignarTarea(AsignarTareaDto dto)
+        public async Task<bool> AsignarTarea(AsignarTareaDto dto, int usuarioId)
         {
             var tarea = await _unitOfWork.TareaRepository.GetById(dto.TareaId);
             if (tarea == null) throw new BusinessException("Tarea no existe", HttpStatusCode.NotFound);
@@ -93,11 +95,11 @@ namespace TaskFlow.Services.Services
             var tarea = await _unitOfWork.TareaRepository.GetById(tareaId);
             if (tarea == null) throw new BusinessException("Tarea no existe", HttpStatusCode.NotFound);
             bool esMiembro = await _unitOfWork.UsuarioRepository.EsMiembroDelProyecto(usuarioId, tarea.ProyectoId);
-            if (!esMiembro) throw new BusinessException("No eres miembro del proyecto", HttpStatusCode.Forbidden);
+            if (!esMiembro) throw new BusinessException("No eres miembro", HttpStatusCode.Forbidden);
 
             var estadosValidos = new[] { "Pendiente", "EnProgreso", "Completada" };
             if (!Array.Exists(estadosValidos, e => e == nuevoEstado))
-                throw new BusinessException("Estado no válido", HttpStatusCode.BadRequest);
+                throw new BusinessException("Estado no valido", HttpStatusCode.BadRequest);
 
             tarea.Estado = nuevoEstado;
             await _unitOfWork.TareaRepository.Update(tarea);

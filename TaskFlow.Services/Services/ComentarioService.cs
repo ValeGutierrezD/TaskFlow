@@ -1,10 +1,10 @@
-﻿using AutoMapper;
+using AutoMapper;
+using System.Net;
 using TaskFlow.Core.DTOs;
 using TaskFlow.Core.Entities;
 using TaskFlow.Core.Exceptions;
 using TaskFlow.Core.Interfaces;
 using TaskFlow.Services.Interfaces;
-using System.Net;
 
 namespace TaskFlow.Services.Services
 {
@@ -27,7 +27,7 @@ namespace TaskFlow.Services.Services
 
             var esMiembro = await _unitOfWork.UsuarioRepository.EsMiembroDelProyecto(usuarioId, tarea.ProyectoId);
             if (!esMiembro)
-                throw new BusinessException("No eres miembro del proyecto para comentar", HttpStatusCode.Forbidden);
+                throw new BusinessException("No eres miembro del proyecto", HttpStatusCode.Forbidden);
 
             var comentario = new Comentario
             {

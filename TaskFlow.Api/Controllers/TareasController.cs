@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TaskFlow.Api.Responses;
+using TaskFlow.Core.CustomEntities;
 using TaskFlow.Core.DTOs;
 using TaskFlow.Core.QueryFilters;
 using TaskFlow.Services.Interfaces;
@@ -7,7 +10,9 @@ using TaskFlow.Services.Validators;
 
 namespace TaskFlow.Api.Controllers
 {
+    [Authorize]
     [ApiController]
+    [Produces("application/json")]
     [Route("api/[controller]")]
     public class TareasController : ControllerBase
     {
@@ -28,69 +33,80 @@ namespace TaskFlow.Api.Controllers
             _actualizarValidator = actualizarValidator;
         }
 
+        private int GetUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
         [HttpPost]
+        [ProducesResponseType(typeof(ApiResponse<TareaDto>), 200)]
         public async Task<IActionResult> CrearTarea(CrearTareaDto dto)
         {
             var validation = await _crearValidator.ValidateAsync(dto);
             if (!validation.IsValid)
-                return BadRequest(new ApiResponse<object>("Error de validación", validation.Errors.Select(e => e.ErrorMessage).ToList()));
+                return BadRequest(new ApiResponse<object>("Error de validacion", validation.Errors.Select(e => e.ErrorMessage).ToList()));
 
             try
             {
-                var tarea = await _tareaService.CrearTarea(dto);
-                return Ok(new ApiResponse<TareaDto>(tarea!, "Tarea creada con éxito"));
+                var tarea = await _tareaService.CrearTarea(dto, GetUserId());
+                return Ok(new ApiResponse<TareaDto>(tarea!, "Tarea creada"));
             }
             catch (Exception ex)
             {
-                return BadRequest(new ApiResponse<object>(ex.Message, new List<string>()));
+                return BadRequest(new ApiResponse<object>(ex.Message));
             }
         }
 
         [HttpGet("proyecto/{proyectoId}")]
-        public async Task<IActionResult> GetTareasByProyecto(int proyectoId)
+        public async Task<IActionResult> GetTareasByProyecto(int proyectoId, [FromQuery] PaginationQueryFilter pagination)
         {
-            var tareas = await _tareaService.GetTareasByProyecto(proyectoId);
-            return Ok(new ApiResponse<IEnumerable<TareaDto>>(tareas));
+            var tareas = await _tareaService.GetTareasByProyecto(proyectoId, pagination);
+            var paginationMeta = new Pagination
+            {
+                TotalCount = tareas.Count(),
+                PageSize = pagination.PageSize,
+                CurrentPage = pagination.PageNumber,
+                TotalPages = (int)Math.Ceiling(tareas.Count() / (double)pagination.PageSize),
+                HasNextPage = pagination.PageNumber < (int)Math.Ceiling(tareas.Count() / (double)pagination.PageSize),
+                HasPreviousPage = pagination.PageNumber > 1
+            };
+            return Ok(new ApiResponse<IEnumerable<TareaDto>>(tareas, "Tareas del proyecto", paginationMeta));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTarea(int id)
         {
             var tarea = await _tareaService.GetTareaById(id);
-            if (tarea == null)
-                return NotFound(new ApiResponse<object>("Tarea no encontrada", new List<string>()));
+            if (tarea == null) return NotFound(new ApiResponse<object>("Tarea no encontrada"));
             return Ok(new ApiResponse<TareaDto>(tarea));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> ActualizarTarea(int id, ActualizarTareaDto dto, [FromQuery] int usuarioId)
+        public async Task<IActionResult> ActualizarTarea(int id, ActualizarTareaDto dto)
         {
             var validation = await _actualizarValidator.ValidateAsync(dto);
             if (!validation.IsValid)
-                return BadRequest(new ApiResponse<object>("Error de validación", validation.Errors.Select(e => e.ErrorMessage).ToList()));
+                return BadRequest(new ApiResponse<object>("Error de validacion", validation.Errors.Select(e => e.ErrorMessage).ToList()));
 
             try
             {
-                var tarea = await _tareaService.ActualizarTarea(id, dto, usuarioId);
+                var tarea = await _tareaService.ActualizarTarea(id, dto, GetUserId());
                 return Ok(new ApiResponse<TareaDto>(tarea!, "Tarea actualizada"));
             }
             catch (Exception ex)
             {
-                return BadRequest(new ApiResponse<object>(ex.Message, new List<string>()));
+                return BadRequest(new ApiResponse<object>(ex.Message));
             }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> EliminarTarea(int id, [FromQuery] int usuarioId)
+        public async Task<IActionResult> EliminarTarea(int id)
         {
             try
             {
-                await _tareaService.EliminarTarea(id, usuarioId);
+                await _tareaService.EliminarTarea(id, GetUserId());
                 return Ok(new ApiResponse<bool>(true, "Tarea eliminada"));
             }
             catch (Exception ex)
             {
-                return BadRequest(new ApiResponse<object>(ex.Message, new List<string>()));
+                return BadRequest(new ApiResponse<object>(ex.Message));
             }
         }
 
@@ -99,30 +115,30 @@ namespace TaskFlow.Api.Controllers
         {
             var validation = await _asignarValidator.ValidateAsync(dto);
             if (!validation.IsValid)
-                return BadRequest(new ApiResponse<object>("Error de validación", validation.Errors.Select(e => e.ErrorMessage).ToList()));
+                return BadRequest(new ApiResponse<object>("Error de validacion", validation.Errors.Select(e => e.ErrorMessage).ToList()));
 
             try
             {
-                var result = await _tareaService.AsignarTarea(dto);
-                return Ok(new ApiResponse<bool>(result, "Tarea asignada correctamente"));
+                var result = await _tareaService.AsignarTarea(dto, GetUserId());
+                return Ok(new ApiResponse<bool>(result, "Tarea asignada"));
             }
             catch (Exception ex)
             {
-                return BadRequest(new ApiResponse<object>(ex.Message, new List<string>()));
+                return BadRequest(new ApiResponse<object>(ex.Message));
             }
         }
 
         [HttpPatch("{id}/estado")]
-        public async Task<IActionResult> CambiarEstado(int id, [FromQuery] string nuevoEstado, [FromQuery] int usuarioId)
+        public async Task<IActionResult> CambiarEstado(int id, [FromQuery] string nuevoEstado)
         {
             try
             {
-                var result = await _tareaService.CambiarEstado(id, nuevoEstado, usuarioId);
+                var result = await _tareaService.CambiarEstado(id, nuevoEstado, GetUserId());
                 return Ok(new ApiResponse<bool>(result, "Estado actualizado"));
             }
             catch (Exception ex)
             {
-                return BadRequest(new ApiResponse<object>(ex.Message, new List<string>()));
+                return BadRequest(new ApiResponse<object>(ex.Message));
             }
         }
 

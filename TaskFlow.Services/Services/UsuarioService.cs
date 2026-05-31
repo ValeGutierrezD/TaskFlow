@@ -1,60 +1,46 @@
-﻿using AutoMapper;
+using System.Net;
 using TaskFlow.Core.DTOs;
 using TaskFlow.Core.Entities;
 using TaskFlow.Core.Exceptions;
 using TaskFlow.Core.Interfaces;
 using TaskFlow.Services.Interfaces;
-using System.Net;
 
 namespace TaskFlow.Services.Services
 {
     public class UsuarioService : IUsuarioService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly IPasswordService _passwordService;
 
-        public UsuarioService(IUnitOfWork unitOfWork, IMapper mapper)
+        public UsuarioService(IUnitOfWork unitOfWork, IPasswordService passwordService)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _passwordService = passwordService;
         }
 
         public async Task<UsuarioDto?> Registrar(CrearUsuarioDto dto)
         {
             var existente = await _unitOfWork.UsuarioRepository.GetByEmail(dto.Email);
-            if (existente != null) throw new BusinessException("El email ya está registrado", HttpStatusCode.BadRequest);
+            if (existente != null)
+                throw new BusinessException("El email ya esta registrado", HttpStatusCode.BadRequest);
 
             var usuario = new Usuario
             {
                 Nombre = dto.Nombre,
                 Email = dto.Email,
-                PasswordHash = dto.Password // En producción usar hash
+                PasswordHash = _passwordService.Hash(dto.Password)
             };
+
             await _unitOfWork.UsuarioRepository.Add(usuario);
             await _unitOfWork.SaveChangesAsync();
-            return _mapper.Map<UsuarioDto>(usuario);
+            return new UsuarioDto { Id = usuario.Id, Nombre = usuario.Nombre, Email = usuario.Email, PasswordHash = usuario.PasswordHash };
         }
 
-        public async Task<UsuarioDto?> Login(LoginDto dto)
+        public async Task<UsuarioDto?> GetByEmail(string email)
         {
-            var usuario = await _unitOfWork.UsuarioRepository.GetByEmail(dto.Email);
-            if (usuario == null || usuario.PasswordHash != dto.Password)
-                throw new BusinessException("Credenciales inválidas", HttpStatusCode.Unauthorized);
-            return _mapper.Map<UsuarioDto>(usuario);
-        }
-
-        public async Task<bool> InvitarMiembro(int proyectoId, int usuarioId, int adminId)
-        {
-            var proyecto = await _unitOfWork.ProyectoRepository.GetById(proyectoId);
-            if (proyecto == null) throw new BusinessException("Proyecto no existe", HttpStatusCode.NotFound);
-            if (proyecto.CreadorId != adminId) throw new BusinessException("Solo el creador puede invitar miembros", HttpStatusCode.Forbidden);
-
-            var usuario = await _unitOfWork.UsuarioRepository.GetById(usuarioId);
-            if (usuario == null) throw new BusinessException("Usuario no existe", HttpStatusCode.NotFound);
-
-            await _unitOfWork.UsuarioRepository.AgregarMiembro(proyectoId, usuarioId);
-            await _unitOfWork.SaveChangesAsync();
-            return true;
+            var user = await _unitOfWork.UsuarioRepository.GetByEmail(email);
+            if (user == null) return null;
+            return new UsuarioDto { Id = user.Id, Nombre = user.Nombre, Email = user.Email, PasswordHash = user.PasswordHash };
         }
     }
 }
