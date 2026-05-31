@@ -66,7 +66,7 @@ namespace TaskFlow.Infrastructure.Mappings
             CreateMap<TareaDto, Tarea>()
                 .ForMember(dest => dest.FechaVencimiento,
                     opt => opt.ConvertUsing<StringToDateTimeConverter, string>());
-
+            CreateMap<CrearTareaDto, Tarea>();
             // Comentario
             CreateMap<Comentario, ComentarioDto>()
                 .ForMember(dest => dest.UsuarioNombre, opt => opt.MapFrom(src => src.Usuario != null ? src.Usuario.Nombre : null));
