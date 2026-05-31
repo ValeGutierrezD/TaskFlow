@@ -15,7 +15,7 @@ using TaskFlow.Core.CustomEntities;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar base de datos MySQL
+// Configurar base de datos MySQL (toma la cadena de appsettings.json)
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<TaskFlowContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
@@ -25,7 +25,7 @@ builder.Services.AddSingleton<IDbConnectionFactory, DbConnectionFactory>();
 builder.Services.AddScoped<IDapperContext, DapperContext>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-// Repositorios especificos
+// Repositorios específicos
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IProyectoRepository, ProyectoRepository>();
 builder.Services.AddScoped<ITareaRepository, TareaRepository>();
@@ -90,7 +90,7 @@ builder.Services.AddSwaggerGen(options =>
     {
         Title = "TaskFlow API",
         Version = "v1",
-        Description = "API para gestion colaborativa de proyectos",
+        Description = "API para gestión colaborativa de proyectos",
         Contact = new() { Name = "Equipo UCB", Email = "desarrollo@ucb.edu.bo" }
     });
 
@@ -103,6 +103,13 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+// Migraciones automáticas (crea las tablas en Azure)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<TaskFlowContext>();
+    db.Database.EnsureCreated();  // ← NUEVA LÍNEA (crea las tablas según el modelo actual)
+}
 
 // Middleware global de excepciones
 app.UseMiddleware<ExceptionHandlingMiddleware>();
