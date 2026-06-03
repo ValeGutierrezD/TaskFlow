@@ -1,0 +1,19 @@
+$resourceGroup="taskflow-gr"
+$location="brazilsouth"
+$mysqlServerName="taskflow26-mysql"
+$mysqlAdminUser="taskflowuser"
+$mysqlAdminPass="Ucb.2026!"
+$mysqlDatabaseName="taskflow-mysqldb"
+$appServicePlan="myFreePlan"
+$webAppName="taskflow-api"
+
+az login --use-device-code
+
+az mysql flexible-server start --resource-group $resourceGroup --name $mysqlServerName
+
+az mysql flexible-server stop --resource-group $resourceGroup --name $mysqlServerName
+
+$resourceGroup   = "taskflow-gr"
+$mysqlServerName = "taskflow26-mysql"
+
+az mysql flexible-server start --resource-group $resourceGroup --name $mysqlServerName

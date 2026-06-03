@@ -18,7 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Configurar base de datos MySQL (toma la cadena de appsettings.json)
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<TaskFlowContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    //options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 21))));
 
 // Registrar UnitOfWork, Dapper y Factory
 builder.Services.AddSingleton<IDbConnectionFactory, DbConnectionFactory>();
@@ -108,20 +109,22 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<TaskFlowContext>();
-    db.Database.EnsureCreated();  // ← NUEVA LÍNEA (crea las tablas según el modelo actual)
+    //db.Database.EnsureCreated();  // ← NUEVA LÍNEA (crea las tablas según el modelo actual)
 }
 
 // Middleware global de excepciones
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-if (app.Environment.IsDevelopment())
+/*if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TaskFlow API v1"));
     app.MapOpenApi();
-}
+}*/
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TaskFlow API v1"));
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

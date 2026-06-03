@@ -98,7 +98,7 @@ namespace TaskFlow.Services.Services
 
         public async Task<bool> CambiarRolMiembro(int proyectoId, int miembroId, string nuevoRol, int adminId)
         {
-            var proyecto = await _unitOfWork.ProyectoRepository.GetById(proyectoId);
+            var proyecto = await _unitOfWork.ProyectoRepository.GetByIdWithMembers(proyectoId);
             if (proyecto == null) throw new BusinessException("Proyecto no existe", HttpStatusCode.NotFound);
             if (proyecto.CreadorId != adminId) throw new BusinessException("Solo el creador puede cambiar roles", HttpStatusCode.Forbidden);
 

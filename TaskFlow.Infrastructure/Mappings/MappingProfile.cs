@@ -67,6 +67,8 @@ namespace TaskFlow.Infrastructure.Mappings
                 .ForMember(dest => dest.FechaVencimiento,
                     opt => opt.ConvertUsing<StringToDateTimeConverter, string>());
             CreateMap<CrearTareaDto, Tarea>();
+            CreateMap<ActualizarTareaDto, Tarea>()
+    .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
             // Comentario
             CreateMap<Comentario, ComentarioDto>()
                 .ForMember(dest => dest.UsuarioNombre, opt => opt.MapFrom(src => src.Usuario != null ? src.Usuario.Nombre : null));

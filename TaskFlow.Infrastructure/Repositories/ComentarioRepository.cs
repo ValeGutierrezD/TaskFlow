@@ -15,7 +15,10 @@ namespace TaskFlow.Infrastructure.Repositories
 
         public async Task<IEnumerable<Comentario>> GetByTareaIdAsync(int tareaId)
         {
-            return await _entities.Where(c => c.TareaId == tareaId).ToListAsync();
+            return await _entities
+                .Include(c => c.Usuario)
+                .Where(c => c.TareaId == tareaId)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Comentario>> GetComentariosConUsuarioAsync(int tareaId)
